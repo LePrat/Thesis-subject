@@ -1,3 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def index(request):
+    """render the schools page"""
+    return render(request, 'schools/index.html')
