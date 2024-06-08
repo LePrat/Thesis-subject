@@ -131,10 +131,41 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 if os.environ.get('IS_ON_AWS', '0') == '1':
-    DEFAULT_FILE_STORAGE = 'app.s3_backends.MediaS3Storage'
-    STATICFILES_STORAGE = 'app.s3_backends.StaticS3Storage'
     AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_ACCESS_KEY = os.environ.get('AWS_S3_ACCESS_KEY')
+    AWS_S3_SECRET_ACCESS_KEY = os.environ.get('AWS_S3_SECRET_ACCESS_KEY')
+    AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME', 'ca-central-1')
     AWS_DEFAULT_ACL = 'public-read'
     AWS_QUERYSTRING_AUTH = False
+
+    if not all([AWS_STORAGE_BUCKET_NAME, AWS_S3_ACCESS_KEY, AWS_S3_SECRET_ACCESS_KEY]):
+        raise ValueError("Missing AWS S3 configuration settings.")
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+            "OPTIONS": {
+                "bucket_name": AWS_STORAGE_BUCKET_NAME,
+                "access_key": AWS_S3_ACCESS_KEY,
+                "secret_key": AWS_S3_SECRET_ACCESS_KEY,
+                "region_name": AWS_S3_REGION_NAME,
+                "default_acl": AWS_DEFAULT_ACL,
+                "querystring_auth": AWS_QUERYSTRING_AUTH,
+                "location": "media",
+            }
+        },
+        "staticfiles": {
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+            "OPTIONS": {
+                "bucket_name": AWS_STORAGE_BUCKET_NAME,
+                "access_key": AWS_S3_ACCESS_KEY,
+                "secret_key": AWS_S3_SECRET_ACCESS_KEY,
+                "region_name": AWS_S3_REGION_NAME,
+                "default_acl": AWS_DEFAULT_ACL,
+                "querystring_auth": AWS_QUERYSTRING_AUTH,
+                "location": "static",
+            }
+        }
+    }
 else:
     MEDIA_ROOT = '/app/media/'
