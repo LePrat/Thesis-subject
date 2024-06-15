@@ -4,7 +4,8 @@ ENV PYTHONUNBUFFERED 1
 
 COPY ./requirements.txt /app/requirements.txt
 
-RUN apk add --update --no-cache postgresql-client build-base postgresql-dev
+RUN apk add --update --no-cache postgresql-client build-base postgresql-dev \
+                                musl-dev zlib zlib-dev linux-headers
 
 RUN pip install --upgrade pip -r /app/requirements.txt  # Install dependencies directly
 
