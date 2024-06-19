@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'schools',
+    'funds',
 ]
 
 MIDDLEWARE = [
@@ -168,4 +168,5 @@ if os.environ.get('IS_ON_AWS', '0') == '1':
         }
     }
 else:
+    STATIC_ROOT = '/app/static/'
     MEDIA_ROOT = '/app/media/'

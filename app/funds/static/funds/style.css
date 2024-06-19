@@ -1,0 +1,68 @@
+/* Define CSS variables for colors */
+:root {
+    --primary-color: #009879;
+    --secondary-color: #ffffff;
+    --hover-color: #f1f1f1;
+    --border-color: #dddddd;
+    --font-family: "Roboto", sans-serif;
+    --font-weight: 500;
+}
+
+/* Universal font settings */
+body {
+    font-family: var(--font-family);
+    font-weight: var(--font-weight);
+    font-style: normal;
+}
+
+/* Flexbox container for the table */
+.flex-table {
+    display: flex;
+    justify-content: center;
+    margin: 25px;
+}
+
+/* Styled table */
+.table-styled {
+    font-family: var(--font-family);
+    font-weight: var(--font-weight);
+    border-collapse: collapse;
+    font-size: 0.9em;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+}
+
+/* Table header styling */
+.table-styled thead tr {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+/* Table cell padding */
+.table-styled th,
+.table-styled td {
+    padding: 12px 15px;
+}
+
+/* Table row styling */
+.table-styled tbody tr {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table-styled tbody tr:last-of-type {
+    border-bottom: 2px solid var(--primary-color);
+}
+
+/* Active row styling */
+.table-styled tbody tr.active-row {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* Hover effect with transition */
+.table-styled tbody tr:hover {
+    background-color: var(--hover-color);
+    transition: background-color 0.3s ease;
+}
