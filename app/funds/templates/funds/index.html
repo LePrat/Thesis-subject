@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="{% static 'funds/htmx.min.js' %}" defer></script>
     <script src="{% static 'funds/scripts.js' %}"></script>
 </head>
 <body>
@@ -22,8 +23,8 @@
                     <th>Location</th>
                     <th>Nationality of Applicant</th>
                     <th>Duration in Months</th>
-                    <th>Years Since PHD Start</th>
-                    <th>Years Since PHD End</th>
+                    <th>Min years since PHD</th>
+                    <th>Max years since PHD</th>
                     <th>Fund Type</th>
                 </tr>
             </thead>
@@ -35,8 +36,8 @@
                         <td>{{ fund.location }}</td>
                         <td>{{ fund.nationality }}</td>
                         <td>{{ fund.duration_in_months }}</td>
-                        <td>{{ fund.years_since_phd_start }}</td>
-                        <td>{{ fund.years_since_phd_end }}</td>
+                        <td>{{ fund.min_years_since_phd }}</td>
+                        <td>{{ fund.max_years_since_phd }}</td>
                         <td>{{ fund.fund_type }}</td>
                     </tr>
                 {% endfor %}

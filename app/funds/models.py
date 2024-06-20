@@ -7,8 +7,8 @@ class Fund(models.Model):
     location = models.CharField(max_length=200)
     nationality = models.CharField(max_length=200)
     duration_in_months = models.PositiveIntegerField()
-    years_since_phd_start = models.PositiveIntegerField()
-    years_since_phd_end = models.PositiveIntegerField()
+    min_years_since_phd = models.PositiveIntegerField()
+    max_years_since_phd = models.PositiveIntegerField()
     link = models.URLField(max_length=200)
     fund_type = models.CharField(max_length=10, choices=[("fellowship", "Fellowship"), ("grant", "Grant")])
 
