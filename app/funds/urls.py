@@ -2,8 +2,8 @@
 URL mapping for the funds app.
 """
 from django.urls import path
-from funds import views
+from .views import FundListView
 
 urlpatterns = [
-    path('', views.index, name='index')
+    path('', FundListView.as_view(), name='fund_list'),
 ]

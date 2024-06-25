@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.views.generic import ListView
 from .models import Fund
 
 
-def index(request):
-    """render the funds page"""
-    return render(request, 'funds/index.html',  {'funds': Fund.objects.all()})
+class FundListView(ListView):
+    model = Fund
+    template_name = 'funds/index.html'
+    context_object_name = 'funds'

@@ -20,12 +20,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Funder</th>
-                    <th>Location</th>
-                    <th>Nationality of Applicant</th>
-                    <th>Duration in Months</th>
-                    <th>Min years since PHD</th>
-                    <th>Max years since PHD</th>
-                    <th>Fund Type</th>
+                    <th>Eligibility</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,12 +28,7 @@
                     <tr class="clickable-row" data-href="{{ fund.link }}">
                         <td>{{ fund.name }}</td>
                         <td>{{ fund.funder }}</td>
-                        <td>{{ fund.location }}</td>
-                        <td>{{ fund.nationality }}</td>
-                        <td>{{ fund.duration_in_months }}</td>
-                        <td>{{ fund.min_years_since_phd }}</td>
-                        <td>{{ fund.max_years_since_phd }}</td>
-                        <td>{{ fund.fund_type }}</td>
+                        <td>{{ fund.eligibility_text|linebreaks}}</td>
                     </tr>
                 {% endfor %}
             </tbody>

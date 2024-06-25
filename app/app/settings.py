@@ -172,3 +172,5 @@ if os.environ.get('IS_ON_AWS', '0') == '1':
 else:
     STATIC_ROOT = '/app/static/'
     MEDIA_ROOT = '/app/media/'
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
