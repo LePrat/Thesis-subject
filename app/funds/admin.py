@@ -4,7 +4,7 @@ from django.urls import path
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 import json
-from datetime import datetime
+import logging
 from .forms import JSONImportForm
 
 
@@ -32,21 +32,33 @@ class FundAdmin(admin.ModelAdmin):
 
                 try:
                     data = json.load(json_file)
+                    if not isinstance(data, list):
+                        raise ValueError("JSON data must be a list of objects")
+
+                    imported_count = 0
                     for item in data:
-                        Fund.objects.create(
-                            name=item.get(name_field),
-                            funder=item.get(funder_field),
-                            max_fund_amount=item.get(amount_field),
-                            eligibility_text=item.get(eligibility_text_field),
-                            link=item.get(link_field)
-                        )
-                    self.message_user(request, "Your JSON file has been imported")
+                        # Add more field validation if necessary
+                        if all(field in item for field in
+                               [name_field, funder_field, amount_field, eligibility_text_field, link_field]):
+                            Fund.objects.create(
+                                name=item.get(name_field),
+                                funder=item.get(funder_field),
+                                max_fund_amount=item.get(amount_field),
+                                eligibility_text=item.get(eligibility_text_field),
+                                link=item.get(link_field)
+                            )
+                            imported_count += 1
+                        else:
+                            raise ValueError("One or more fields are missing in the JSON data")
+
+                    self.message_user(request, f"Successfully imported {imported_count} funds")
                     return HttpResponseRedirect("..")
+                except json.JSONDecodeError:
+                    self.message_user(request, "Invalid JSON file", level='ERROR')
                 except Exception as e:
+                    logging.exception("Error importing JSON")
                     self.message_user(request, f"Error importing JSON: {str(e)}", level='ERROR')
         else:
             form = JSONImportForm()
 
-        return render(
-            request, "admin/json_import.html", context={'form': form}
-        )
+        return render(request, "admin/json_import.html", context={'form': form})

@@ -21,6 +21,7 @@
                     <th>Name</th>
                     <th>Funder</th>
                     <th>Eligibility</th>
+                    <th>Max Fund Amount</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,6 +30,7 @@
                         <td>{{ fund.name }}</td>
                         <td>{{ fund.funder }}</td>
                         <td>{{ fund.eligibility_text|linebreaks}}</td>
+                        <td>{{ fund.max_fund_amount }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
