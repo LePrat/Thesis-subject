@@ -11,7 +11,7 @@
         <div class="submit-row">
             <form action="{% url 'admin:execute_finder' object_id %}" method="post" style="display:inline;">
                 {% csrf_token %}
-                <input type="submit" value="Execute location finder" class="button" />
+                <input type="submit" value="Execute location & nationality finder" class="button" />
             </form>
         </div>
     {% endif %}

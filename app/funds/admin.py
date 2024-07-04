@@ -103,7 +103,12 @@ class FundAdmin(admin.ModelAdmin):
         if request.method == 'POST':
             fund = self.get_object(request, object_id)
             result = finder(fund.eligibility_text)
-            self.message_user(request, f"Script executed. Result: {result}")
+            if ";" in result:
+                location, nationality = result.split(";")
+                self.message_user(request,
+                                  f"Script executed. Result: [Location]: {location}, [Nationality]: {nationality}")
+            else:
+                self.message_user(request, f"Script executed. Result: {result}")
         return redirect('admin:funds_fund_change', object_id)
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
