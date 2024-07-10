@@ -20,6 +20,8 @@
                 <tr>
                     <th>Name</th>
                     <th>Funder</th>
+                    <th>Location</th>
+                    <th>Nationality</th>
                     <th>Eligibility</th>
                     <th>Max Fund Amount</th>
                 </tr>
@@ -29,6 +31,8 @@
                     <tr class="clickable-row" data-href="{{ fund.link }}">
                         <td>{{ fund.name }}</td>
                         <td>{{ fund.funder }}</td>
+                        <td>{{ fund.location }}</td>
+                        <td>{{ fund.nationality }}</td>
                         <td>{{ fund.eligibility_text|linebreaks}}</td>
                         <td>{{ fund.max_fund_amount }}</td>
                     </tr>
