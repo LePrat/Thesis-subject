@@ -29,5 +29,18 @@ def finder(content):
     return response.text
 
 
-def run_finder_for_fund(fund):
-    return finder(fund.eligibility_text)
+def run_finder(funds):
+    for fund in funds:
+        output = finder(fund.eligibility_text)
+        if isinstance(output, ResourceExhausted):
+            raise RuntimeError("Google resources exhausted, the limit is 15 requests per minute")
+        try:
+            if ";" in output:
+                location, nationality = output.split(";")
+                fund.location = location
+                fund.nationality = nationality
+                fund.location_found = True
+                fund.save()
+            print(f"{fund.name} | {output}")
+        except TypeError:
+            raise RuntimeError("Google resources exhausted, the limit is 15 requests per minute")

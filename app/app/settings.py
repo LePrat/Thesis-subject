@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_beat',
     'django_htmx',
     'funds',
     'needle',
@@ -175,3 +176,6 @@ else:
     MEDIA_ROOT = '/app/media/'
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'

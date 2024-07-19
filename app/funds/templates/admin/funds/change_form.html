@@ -1,0 +1,9 @@
+{% extends 'admin/change_form.html' %}
+{% load i18n admin_urls %}
+
+{% block submit_buttons_bottom %}
+    {{ block.super }}
+    <div class="submit-row">
+        <input type="submit" value="Execute location & nationality finder" class="button" name="_execute-finder"/>
+    </div>
+{% endblock %}

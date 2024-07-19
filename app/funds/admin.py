@@ -1,14 +1,14 @@
-from django.contrib import admin
-from .models import Fund
-from django.urls import path
-from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
 import json
 import logging
-from .forms import JSONImportForm
-from needle.location_finder import finder
+from django.contrib import admin
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import path
 from django.utils.html import format_html, strip_tags
 from django.utils.text import Truncator
+from needle.location_finder import finder
+from .forms import JSONImportForm
+from .models import Fund
 
 
 @admin.register(Fund)
@@ -17,13 +17,9 @@ class FundAdmin(admin.ModelAdmin):
     A custom Django admin class for managing Fund objects.
 
     This class extends the default `ModelAdmin` class and provides the following functionalities:
-
-    - Uses a custom template (`admin/funds_changelist.html`) for the change list view.
-    - Extends the admin URLs to include two custom URLs:
-        - `import-json/`: Handles importing funds from a JSON file
-        - `<path:object_id>/execute_finder/`: Executes a script (`finder`)
     """
-    change_list_template = "admin/funds_changelist.html"
+    change_list_template = "admin/funds/change_list.html"
+    change_form_template = "admin/funds/change_form.html"
     list_display = ('name', 'funder', 'location', 'nationality', 'truncated_eligibility_text', 'max_fund_amount')
 
     def get_urls(self):
@@ -33,7 +29,6 @@ class FundAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         my_urls = [
             path('import-json/', self.import_json),
-            path('<path:object_id>/execute_finder/', self.execute_finder, name='execute_finder'),
         ]
         return my_urls + urls
 
@@ -111,41 +106,24 @@ class FundAdmin(admin.ModelAdmin):
         # Render the import form template
         return render(request, "admin/json_import.html", context={'form': form})
 
-    def execute_finder(self, request, object_id):
+    def response_change(self, request, obj):
         """
-        Executes a script (`finder`) based on a specific Fund object's eligibility text.
+            Handle the response after changes to the object, including custom actions.
 
-        This method is triggered when a user visits a URL like `/admin/funds/<fund_id>/execute_finder/`.
-        It retrieves the Fund object with the corresponding ID and executes the `finder` script, passing the object's
-        eligibility text as input. The result of the script is displayed as a user message.
-
-        This functionality allows users to run a custom script on individual funds within the admin interface.
+            This method overrides the default ModelAdmin response_change to add custom
+            functionality for the 'Execute location & nationality finder' button.
+            If the button is clicked, the finder script runs on the object and displays a success message.
         """
-        if request.method == 'POST':
-            fund = self.get_object(request, object_id)
-            result = finder(fund.eligibility_text)
+        if "_execute-finder" in request.POST:
+            result = finder(obj.eligibility_text)
             if ";" in result:
                 location, nationality = result.split(";")
-                self.message_user(request,
-                                  f"Script executed. Result: [Location]: {location}, [Nationality]: {nationality}")
-                fund.location = location
-                fund.nationality = nationality
-                fund.save()
+                message = f"Script executed. Result: [Location]: {location}, [Nationality]: {nationality}"
+                self.message_user(request, message)
+                obj.location = location
+                obj.nationality = nationality
+                obj.save()
+                return HttpResponseRedirect(".")
             else:
-                self.message_user(request, f"Script executed. Result: {result}")
-        return redirect('admin:funds_fund_change', object_id)
-
-    def change_view(self, request, object_id, form_url='', extra_context=None):
-        """
-        Customizes the change view for Fund objects in the admin interface.
-
-        This method overrides the default `change_view` behavior to add a context variable `show_execute_button`
-        that's set to `True`. This variable is used by a custom template (`change_form.html`) to conditionally display
-        a button for executing the `finder` script on the specific fund being viewed.
-
-        This customization enhances the user experience by providing a convenient way to run the script directly from
-        the change view for each fund.
-        """
-        extra_context = extra_context or {}
-        extra_context['show_execute_button'] = True
-        return super().change_view(request, object_id, form_url, extra_context=extra_context)
+                self.message_user(request, f"Script executed. Result: {result}", level='ERROR')
+        return super().response_change(request, obj)
